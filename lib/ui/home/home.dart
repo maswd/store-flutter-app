@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store/common/exceptions.dart';
 import 'package:store/common/utils.dart';
 import 'package:store/data/product.dart';
 import 'package:store/data/repo/banner_repository.dart';
@@ -8,6 +9,7 @@ import 'package:store/data/repo/product_repository.dart';
 import 'package:store/theme.dart';
 import 'package:store/ui/home/bloc/home_bloc.dart';
 import 'package:store/ui/product/product.dart';
+import 'package:store/ui/widgets/error.dart';
 import 'package:store/ui/widgets/image.dart';
 import 'package:store/ui/widgets/slider.dart';
 
@@ -66,20 +68,11 @@ class HomeScreen extends StatelessWidget {
             } else if (state is HomeLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is HomeError) {
-              return Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(state.exception.message),
-                    ElevatedButton(
-                      onPressed: () {
-                        BlocProvider.of<HomeBloc>(context).add(HomeRefresh());
-                      },
-                      child: const Text("تلاش دوباره"),
-                    )
-                  ],
-                ),
+              return AppErrorWidget(
+                exception: state.exception,
+                onPressed: () {
+                  BlocProvider.of<HomeBloc>(context).add(HomeRefresh());
+                },
               );
             } else {
               throw Exception("state is not supported");
@@ -90,6 +83,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
 
 class _HorizontalProductList extends StatelessWidget {
   final String title;

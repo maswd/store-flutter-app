@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:store/data/repo/auth_repository.dart';
 import 'package:store/data/repo/banner_repository.dart';
 import 'package:store/data/repo/product_repository.dart';
 import 'package:store/theme.dart';
+import 'package:store/ui/auth/auth.dart';
 import 'package:store/ui/home/home.dart';
+import 'package:store/ui/root.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  authRepository.loadAuthInfo();
   runApp(const MyApp());
 }
 
@@ -30,6 +35,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        dividerColor: Colors.grey.shade200,
         textTheme: TextTheme(
             // subtitle1
             titleMedium: defaultTextStyle.apply(
@@ -51,7 +57,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const Directionality(
-          textDirection: TextDirection.rtl, child: HomeScreen()),
+          textDirection: TextDirection.rtl, child: RootScreen()),
     );
   }
 }
