@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:store/common/http_client.dart';
 import 'package:store/data/cart_item.dart';
+import 'package:store/data/add_to_cart_response.dart';
 import 'package:store/data/cart_response.dart';
 import 'package:store/data/source/cart_data_source.dart';
 
@@ -9,33 +11,29 @@ abstract class ICartRepository extends ICartDataSource {}
 
 class CartRepository implements ICartRepository {
   final ICartDataSource dataSource;
-
+  static ValueNotifier<int> cartItemNotifier = ValueNotifier(0);
   CartRepository(this.dataSource);
 
   @override
-  Future<CartResponse> add(int productId) => dataSource.add(productId);
+  Future<AddToCartResponse> add(int productId) => dataSource.add(productId);
 
   @override
-  Future<CartResponse> changeCount(int cartItemId, int count) {
-    // TODO: implement changeCount
-    throw UnimplementedError();
+  Future<AddToCartResponse> changeCount(int cartItemId, int count) {
+    return dataSource.changeCount(cartItemId, count);
   }
 
   @override
-  Future<int> count() {
-    // TODO: implement count
-    throw UnimplementedError();
+  Future<int> count() async {
+    final count = await dataSource.count();
+    cartItemNotifier.value = count;
+    return count;
   }
 
   @override
   Future<void> delete(int cartItemId) {
-    // TODO: implement delete
-    throw UnimplementedError();
+    return dataSource.delete(cartItemId);
   }
 
   @override
-  Future<List<CartItemEntity>> getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
-  }
+  Future<CartResponse> getAll() => dataSource.getAll();
 }

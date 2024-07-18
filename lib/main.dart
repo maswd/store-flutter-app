@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:store/common/utils.dart';
 import 'package:store/data/repo/auth_repository.dart';
 import 'package:store/data/repo/banner_repository.dart';
 import 'package:store/data/repo/product_repository.dart';
@@ -31,10 +32,22 @@ class MyApp extends StatelessWidget {
       debugPrint(e.toString());
     });
     const defaultTextStyle = TextStyle(
-        fontFamily: "IranYekan", color: LightThemeColors.primaryTextColor);
+        fontFamily: defaultFontFamily,
+        color: LightThemeColors.primaryTextColor);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+            floatingLabelStyle: const TextStyle(
+                color: LightThemeColors.primaryColor,
+                fontFamily: defaultFontFamily),
+            labelStyle: const TextStyle(
+                color: LightThemeColors.secondaryTextColor,
+                fontFamily: defaultFontFamily),
+            border: const OutlineInputBorder(),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: LightThemeColors.primaryTextColor.withOpacity(.1)))),
         dividerColor: Colors.grey.shade200,
         textTheme: TextTheme(
             // subtitle1
@@ -52,7 +65,9 @@ class MyApp extends StatelessWidget {
                 color: LightThemeColors.secondaryTextColor)),
         colorScheme: const ColorScheme.light(
             primary: LightThemeColors.primaryColor,
+            onPrimary: Colors.white,
             secondary: LightThemeColors.secondaryColor,
+            surfaceContainerHighest: Color(0xffF5F5F5),
             onSecondary: Colors.white),
         useMaterial3: true,
       ),

@@ -2,8 +2,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:store/data/repo/auth_repository.dart';
+import 'package:store/data/repo/cart_repository.dart';
 import 'package:store/ui/cart/cart.dart';
 import 'package:store/ui/home/home.dart';
+import 'package:store/ui/widgets/badge.dart';
 
 const int homeIndex = 0;
 const int cartIndex = 1;
@@ -60,18 +63,41 @@ class _RootScreenState extends State<RootScreen> {
               _navigator(
                   _profileKey,
                   profileIndex,
-                  const Center(
-                    child: Text('Profile'),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("پروفایل"),
+                      ElevatedButton(
+                          onPressed: () {
+                            authRepository.signOut();
+                            CartRepository.cartItemNotifier.value = 0;
+                          },
+                          child: const Text("خروج"))
+                    ],
                   )),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(
+            items: [
+              const BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.home), label: 'خانه'),
               BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.cart), label: 'سبد خرید'),
-              BottomNavigationBarItem(
+                  icon: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Icon(CupertinoIcons.cart),
+                      Positioned(
+                          right: -10,
+                          child: ValueListenableBuilder<int>(
+                            valueListenable: CartRepository.cartItemNotifier,
+                            builder: (context, value, child) {
+                              return BadgeCart(value: value);
+                            },
+                          ))
+                    ],
+                  ),
+                  label: 'سبد خرید'),
+              const BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.person), label: 'پروفایل'),
             ],
             currentIndex: selectedScreenIndex,
@@ -94,5 +120,11 @@ class _RootScreenState extends State<RootScreen> {
             onGenerateRoute: (settings) => MaterialPageRoute(
                 builder: (context) => Offstage(
                     offstage: selectedScreenIndex != index, child: child)));
+  }
+
+  @override
+  void initState() {
+    cartRepository.count();
+    super.initState();
   }
 }

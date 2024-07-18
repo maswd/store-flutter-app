@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store/common/utils.dart';
 import 'package:store/data/repo/auth_repository.dart';
+import 'package:store/data/repo/cart_repository.dart';
+import 'package:store/theme.dart';
 import 'package:store/ui/auth/bloc/auth_bloc.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -36,7 +39,11 @@ class _AuthScreenState extends State<AuthScreen> {
                   foregroundColor: WidgetStateProperty.all(
                       themeData.colorScheme.secondary))),
           inputDecorationTheme: InputDecorationTheme(
-            labelStyle: const TextStyle(color: onBackground),
+            floatingLabelStyle: const TextStyle(
+                color: LightThemeColors.primaryColor,
+                fontFamily: defaultFontFamily),
+            labelStyle: const TextStyle(
+                color: onBackground, fontFamily: defaultFontFamily),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -51,7 +58,8 @@ class _AuthScreenState extends State<AuthScreen> {
           backgroundColor: themeData.colorScheme.secondary,
           body: BlocProvider<AuthBloc>(
             create: (context) {
-              final bloc = AuthBloc(authRepository);
+              final bloc =
+                  AuthBloc(authRepository, cartRepository: cartRepository);
               bloc.stream.forEach((state) {
                 if (state is AuthSuccess) {
                   Navigator.of(context).pop();
