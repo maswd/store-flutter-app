@@ -9,7 +9,7 @@ class PaymentGatewayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WebView(
-      initialUrl: "expertdevelopers.ir/payment?order_id=7762",
+      initialUrl: bankGatewayUrl,
       javascriptMode: JavascriptMode.unrestricted,
     );
   }
