@@ -7,6 +7,7 @@ import 'package:store/data/order.dart';
 import 'package:store/data/repo/order_repository.dart';
 import 'package:store/theme.dart';
 import 'package:store/ui/cart/price_info.dart';
+import 'package:store/ui/payment_webview.dart';
 import 'package:store/ui/receipt/payment_receipt.dart';
 import 'package:store/ui/shipping/bloc/shipping_bloc.dart';
 
@@ -66,11 +67,18 @@ class _ShipingScreenState extends State<ShipingScreen> {
                 ),
               );
             } else if (event is ShippingSuccess) {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => PaymentReceiptScreen(
-                  orderId: event.data.orderId,
-                ),
-              ));
+              if (event.data.bankGatewayUrl.isNotEmpty) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PaymentGatewayScreen(
+                          bankGatewayUrl: event.data.bankGatewayUrl,
+                        )));
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => PaymentReceiptScreen(
+                    orderId: event.data.orderId,
+                  ),
+                ));
+              }
             }
           });
           return bloc;
@@ -151,7 +159,16 @@ class _ShipingScreenState extends State<ShipingScreen> {
                                           WidgetStatePropertyAll(Colors.white),
                                       backgroundColor: WidgetStatePropertyAll(
                                           LightThemeColors.primaryColor)),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    BlocProvider.of<ShippingBloc>(context).add(
+                                        ShippingCreateOrder(CreateOrderParams(
+                                            firstNameController.text,
+                                            lastNameController.text,
+                                            phoneNumberController.text,
+                                            addressController.text,
+                                            postalController.text,
+                                            PaymentMethod.online)));
+                                  },
                                   child: const Text(
                                     "پرداخت اینترنتی",
                                   )),

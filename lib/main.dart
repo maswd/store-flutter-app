@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         fontFamily: defaultFontFamily,
         color: LightThemeColors.primaryTextColor);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
