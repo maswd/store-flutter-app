@@ -4,9 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/common/utils.dart';
+import 'package:store/data/favorite_manager.dart';
 import 'package:store/data/product.dart';
+import 'package:store/data/repo/auth_repository.dart';
 import 'package:store/data/repo/cart_repository.dart';
 import 'package:store/theme.dart';
+import 'package:store/ui/cart/bloc/cart_bloc.dart';
 import 'package:store/ui/product/bloc/product_bloc.dart';
 import 'package:store/ui/product/comment/comment_list.dart';
 import 'package:store/ui/widgets/image.dart';
@@ -34,8 +37,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: BlocProvider<ProductBloc>(
-        create: (context) {
+      child: BlocProvider(
+          create: (context) {
           final bloc = ProductBloc(cartRepository);
           stateSubscription = bloc.stream.listen((state) {
             if (state is ProductAddToCartSuccess) {
@@ -82,8 +85,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   foregroundColor: LightThemeColors.primaryTextColor,
                   actions: [
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(CupertinoIcons.heart),
+                      onPressed: () {
+                        if (!favoriteManager.isFavorite(widget.product)) {
+                          favoriteManager.addFavorite(widget.product);
+                        } else {
+                          favoriteManager.delete(widget.product);
+                        }
+                        setState(() {});
+                      },
+                      icon: ValueListenableBuilder(
+                          valueListenable: favoriteManager.listenble,
+                          builder: (context, box, child) {
+                            return Icon(
+                              favoriteManager.isFavorite(widget.product)
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              size: 20,
+                            );
+                          }),
                     )
                   ],
                 ),

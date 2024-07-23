@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:store/common/utils.dart';
+import 'package:store/data/favorite_manager.dart';
 import 'package:store/data/repo/auth_repository.dart';
 import 'package:store/data/repo/banner_repository.dart';
 import 'package:store/data/repo/product_repository.dart';
@@ -8,7 +9,8 @@ import 'package:store/ui/auth/auth.dart';
 import 'package:store/ui/home/home.dart';
 import 'package:store/ui/root.dart';
 
-void main() {
+void main() async {
+  await FavoriteManager.init();
   WidgetsFlutterBinding.ensureInitialized();
   authRepository.loadAuthInfo();
   runApp(const MyApp());

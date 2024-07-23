@@ -1,6 +1,6 @@
 part of 'payment_receipt_bloc.dart';
 
-sealed class PaymentReceiptState extends Equatable {
+abstract class PaymentReceiptState extends Equatable {
   const PaymentReceiptState();
 
   @override

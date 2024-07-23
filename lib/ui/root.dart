@@ -6,6 +6,7 @@ import 'package:store/data/repo/auth_repository.dart';
 import 'package:store/data/repo/cart_repository.dart';
 import 'package:store/ui/cart/cart.dart';
 import 'package:store/ui/home/home.dart';
+import 'package:store/ui/profile/profile_screen.dart';
 import 'package:store/ui/widgets/badge.dart';
 
 const int homeIndex = 0;
@@ -60,21 +61,7 @@ class _RootScreenState extends State<RootScreen> {
             children: [
               _navigator(_homeKey, homeIndex, const HomeScreen()),
               _navigator(_cartKey, cartIndex, const CartScreen()),
-              _navigator(
-                  _profileKey,
-                  profileIndex,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("پروفایل"),
-                      ElevatedButton(
-                          onPressed: () {
-                            authRepository.signOut();
-                            CartRepository.cartItemNotifier.value = 0;
-                          },
-                          child: const Text("خروج"))
-                    ],
-                  )),
+              _navigator(_profileKey, profileIndex, const ProfileScreen())
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(

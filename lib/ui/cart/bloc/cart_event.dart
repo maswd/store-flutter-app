@@ -1,16 +1,23 @@
 part of 'cart_bloc.dart';
 
-sealed class CartEvent extends Equatable {
+abstract class CartEvent extends Equatable {
   const CartEvent();
 
   @override
   List<Object> get props => [];
+
+  void add(CartStarted cartStarted) {}
 }
 
 class CartStarted extends CartEvent {
   final AuthInfo? authInfo;
   final bool isRefreshing;
   const CartStarted(this.authInfo, {this.isRefreshing = false});
+}
+class CartUpdated extends CartEvent {
+  final bool refreshing;
+
+  const CartUpdated({this.refreshing=false});
 }
 
 class CartDeleteButtonClicked extends CartEvent {

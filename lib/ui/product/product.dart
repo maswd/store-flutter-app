@@ -1,54 +1,82 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:store/common/utils.dart';
+import 'package:store/data/favorite_manager.dart';
 import 'package:store/data/product.dart';
 import 'package:store/ui/product/details.dart';
 import 'package:store/ui/widgets/image.dart';
 
-class ProductItem extends StatelessWidget {
+class ProductItem extends StatefulWidget {
   const ProductItem(
-      {super.key, required this.product, required this.borderRadius});
+      {super.key,
+      required this.product,
+      required this.borderRadius,
+      this.itemHeight = 189,
+      this.itemWidth = 176});
 
   final ProductEntity product;
   final BorderRadius borderRadius;
 
+  final double itemHeight;
+  final double itemWidth;
+
+  @override
+  State<ProductItem> createState() => _ProductItemState();
+}
+
+class _ProductItemState extends State<ProductItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(4),
         child: InkWell(
-          borderRadius: borderRadius,
+          borderRadius: widget.borderRadius,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ProductDetailScreen(
-                    product: product,
+                    product: widget.product,
                   ))),
           child: SizedBox(
-            width: 176,
+            width: widget.itemWidth,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
                   children: [
-                    SizedBox(
-                      width: 176,
-                      height: 189,
+                    AspectRatio(
+                      aspectRatio: .93,
                       child: ImageLoadingService(
-                        imageUrl: product.imageUrl,
-                        borderRadius: borderRadius,
+                        imageUrl: widget.product.imageUrl,
+                        borderRadius: widget.borderRadius,
                       ),
                     ),
                     Positioned(
                       right: 8,
                       top: 8,
-                      child: Container(
-                        width: 32,
-                        height: 32,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.white),
-                        child: const Icon(
-                          CupertinoIcons.heart,
-                          size: 20,
+                      child: InkWell(
+                        onTap: () {
+                          if (!favoriteManager.isFavorite(widget.product)) {
+                            favoriteManager.addFavorite(widget.product);
+                          } else {
+                            favoriteManager.delete(widget.product);
+                          }
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          child: ValueListenableBuilder(
+                              valueListenable: favoriteManager.listenble,
+                              builder: (context, box, child) {
+                                return Icon(
+                                  favoriteManager.isFavorite(widget.product)
+                                      ? CupertinoIcons.heart_fill
+                                      : CupertinoIcons.heart,
+                                  size: 20,
+                                );
+                              }),
                         ),
                       ),
                     ),
@@ -57,7 +85,7 @@ class ProductItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    product.title,
+                    widget.product.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -65,7 +93,7 @@ class ProductItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8),
                   child: Text(
-                    product.previousPrice.withPriceLabel,
+                    widget.product.previousPrice.withPriceLabel,
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: Colors.grey),
@@ -73,7 +101,7 @@ class ProductItem extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8),
-                  child: Text(product.price.withPriceLabel),
+                  child: Text(widget.product.price.withPriceLabel),
                 ),
               ],
             ),

@@ -1,9 +1,7 @@
 part of 'cart_bloc.dart';
 
-sealed class CartState {
+abstract class CartState {
   const CartState();
-
-
 }
 
 final class CartLoading extends CartState {}
@@ -12,7 +10,6 @@ class CartSuccess extends CartState {
   final CartResponse cartResponse;
 
   const CartSuccess(this.cartResponse);
- 
 }
 
 class CartError extends CartState {

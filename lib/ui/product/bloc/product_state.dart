@@ -1,6 +1,6 @@
 part of 'product_bloc.dart';
 
-sealed class ProductState extends Equatable {
+abstract class ProductState extends Equatable {
   const ProductState();
 
   @override
@@ -18,4 +18,5 @@ class ProductAddToCartButttonError extends ProductState {
   @override
   List<Object> get props => [exception];
 }
-class ProductAddToCartSuccess extends ProductState{}
+
+class ProductAddToCartSuccess extends ProductState {}

@@ -20,6 +20,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         } else {
           await loadCartItems(emit, event.isRefreshing);
         }
+      } else if (event is CartUpdated) {
       } else if (event is CartDeleteButtonClicked) {
         try {
           if (state is CartSuccess) {
@@ -96,7 +97,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (!isRefreshing) {
         emit(CartLoading());
       }
-      await Future.delayed(const Duration(milliseconds: 2000));
+      // await Future.delayed(const Duration(milliseconds: 2000));
       final result = await cartRepository.getAll();
       if (result.cartItems.isEmpty) {
         emit(CartEmpty());
@@ -117,9 +118,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       payablePrice += cartItem.product.price * cartItem.count;
     });
     shippingCost = payablePrice >= 250000 ? 0 : 30000;
-    cartResponse.payablePrice = payablePrice;
     cartResponse.totalPrice = totalPrice;
     cartResponse.shippingCost = shippingCost;
+    cartResponse.payablePrice = payablePrice;
     return CartSuccess(cartResponse);
   }
 }

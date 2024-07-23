@@ -8,6 +8,7 @@ import 'package:store/data/repo/banner_repository.dart';
 import 'package:store/data/repo/product_repository.dart';
 import 'package:store/theme.dart';
 import 'package:store/ui/home/bloc/home_bloc.dart';
+import 'package:store/ui/list/list.dart';
 import 'package:store/ui/product/product.dart';
 import 'package:store/ui/widgets/error.dart';
 import 'package:store/ui/widgets/image.dart';
@@ -52,13 +53,25 @@ class HomeScreen extends StatelessWidget {
                       case 3:
                         return _HorizontalProductList(
                           title: 'جدیدترین',
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const ProductListScreen(
+                                sort: ProductSort.latest,
+                              ),
+                            ));
+                          },
                           products: state.latestProducts,
                         );
                       case 4:
                         return _HorizontalProductList(
                           title: 'پربازدیدترین',
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const ProductListScreen(
+                                sort: ProductSort.popular,
+                              ),
+                            ));
+                          },
                           products: state.popularProducts,
                         );
                       default:
@@ -83,7 +96,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
 
 class _HorizontalProductList extends StatelessWidget {
   final String title;

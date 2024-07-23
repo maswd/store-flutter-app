@@ -175,12 +175,27 @@ class _CartScreenState extends State<CartScreen> {
                 width: 140,
               ));
         } else if (state is CartEmpty) {
-          return EmptyView(
-              message: "تاکنون هیچ محصولی به سبد خرید خود اضافه نکرده اید",
-              image: SvgPicture.asset(
-                'assets/img/empty_cart.svg',
-                width: 200,
-              ));
+          return SmartRefresher(
+            header: const ClassicHeader(
+              completeText: "با موفقیت انجام شد",
+              refreshingText: "در حال بروز رسانی",
+              idleText: 'برای بروزرسانی پایین بکشید',
+              releaseText: "رها کنید",
+              failedText: "خطای نامشخص",
+              spacing: 5,
+            ),
+            controller: _refreshController,
+            onRefresh: () {
+              cartBloc?.add(CartStarted(AuthRepository.authChangeNotifier.value,
+                  isRefreshing: true));
+            },
+            child: EmptyView(
+                message: "تاکنون هیچ محصولی به سبد خرید خود اضافه نکرده اید",
+                image: SvgPicture.asset(
+                  'assets/img/empty_cart.svg',
+                  width: 200,
+                )),
+          );
         } else {
           throw Exception("current cart state is not valid");
         }

@@ -1,6 +1,6 @@
 part of 'shipping_bloc.dart';
 
-sealed class ShippingState extends Equatable {
+abstract class ShippingState extends Equatable {
   const ShippingState();
 
   @override

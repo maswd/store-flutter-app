@@ -1,6 +1,6 @@
 part of 'comment_list_bloc_bloc.dart';
 
-sealed class CommentListState extends Equatable {
+abstract class CommentListState extends Equatable {
   const CommentListState();
 
   @override

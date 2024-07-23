@@ -1,10 +1,8 @@
-class CreateOrderResult {
-  final int orderId;
-  final String bankGatewayUrl;
-  CreateOrderResult(this.orderId, this.bankGatewayUrl);
-  CreateOrderResult.fromJson(Map<String, dynamic> json)
-      : orderId = json["order_id"],
-        bankGatewayUrl = json["bank_gateway_url"];
+import 'package:store/data/product.dart';
+
+enum PaymentMethod {
+  online,
+  cashOnDelivery,
 }
 
 class CreateOrderParams {
@@ -19,7 +17,26 @@ class CreateOrderParams {
       this.address, this.postalCode, this.paymentMethod);
 }
 
-enum PaymentMethod {
-  online,
-  cashOnDelivery,
+class CreateOrderResult {
+  final int orderId;
+  final String bankGatewayUrl;
+  CreateOrderResult(this.orderId, this.bankGatewayUrl);
+  CreateOrderResult.fromJson(Map<String, dynamic> json)
+      : orderId = json["order_id"],
+        bankGatewayUrl = json["bank_gateway_url"];
+}
+
+class OrderEntity {
+  final int id;
+  final int payablePrice;
+  final List<ProductEntity> items;
+
+  OrderEntity(this.id, this.payablePrice, this.items);
+
+  OrderEntity.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        payablePrice = json["payable"],
+        items = (json["order_items"] as List)
+            .map((item) => ProductEntity.fromJson(item["product"]))
+            .toList();
 }
